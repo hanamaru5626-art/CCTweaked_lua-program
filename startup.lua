@@ -1,4 +1,4 @@
-local url = "https://github.com/hanamaru5626-art/CCTweaked_lua-program/"
+local url = "https://raw.githubusercontent.con/hanamaru5626-art/CCTweaked_lua-program/"
 local response = http.get(url)
 if not response then
     term.clear()
@@ -22,4 +22,5 @@ else
     else
         fn()
     end
+
 end
