@@ -10,6 +10,8 @@ print("starting main computer")
 
 while true do
     local _, _, ch, reply, msg =os.pullEvent("modem_message")
+    print("recv ch:", ch, "reply:", reply)
+    print(textutils.serialize(msg))
     if ch ~= MAIN_CHANNEL or type(msg) ~="table" then goto continue end
     local dest = msg.to
     if tonumber(dest) then
