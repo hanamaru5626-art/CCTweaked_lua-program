@@ -21,10 +21,8 @@ while true do
     ))
     if tonumber(dest) then
         modem.transmit(tonumber(dest), msg.from, msg)
-        print("[SEND] direct ->", dest)
     else
         modem.transmit(DNS_CHANNEL, MAIN_CHANNEL, msg)
-        print("[SEND] DNS ->", DNS_CHANNEL)
     end
     print("----------------------")
     ::continue::
