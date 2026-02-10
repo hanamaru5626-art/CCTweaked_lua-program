@@ -15,10 +15,9 @@ while true do
         goto continue
     end
     local dest = msg.to
-    print(("[RECV] from:%s to:%s ch:%d"):format(
+    print(("[RECV] from:%s to:%s"):format(
         tostring(msg.from),
-        tostring(msg.to),
-        ch
+        tostring(msg.to)
     ))
     if tonumber(dest) then
         modem.transmit(tonumber(dest), msg.from, msg)
