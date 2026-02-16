@@ -3,8 +3,8 @@ local bit = bit
 
 net.init(12)
 
-local ACCOUNT_FILE = "/accounts.dat"
-local LOG_FILE = "/transactions.log"
+local ACCOUNT_FILE = "/disk/accounts.dat"
+local LOG_FILE = "/disk/transactions.log"
 
 local sessions = {}
 local ADMIN_PASSWORD = "admin123"
@@ -69,6 +69,15 @@ end
 while true do
   local from, raw = net.receive()
   if not raw then goto continue end
+  if type(raw)=="string" and raw:match("^CHECK:") then
+    local name = raw:sub(7)
+    if accounts[name] then
+      net.send(from,"EXISTS")
+    else
+      net.send(from,"NOEXIST")
+    end
+    goto continue
+  end
   if raw == "disconnect" then
     if sessions[from] and sessions[from].name then
       local acc = accounts[sessions[from].name]
@@ -179,9 +188,13 @@ while true do
        and accounts[target].online
        and sessions[accounts[target].online] then
       local t=accounts[target].online
-      sessions[t].claim={from=s.name,money=money}
+      sessions[t].claim={
+        from=s.name,
+        money=money
+      }
       sessions[t].state="CLAIM_WAIT"
-      sendSafe(t,"CLAIM_REQ,FROM:"..s.name..",M:"..money)
+      sendSafe(t,
+        "CLAIM_REQ,FROM:"..s.name..",M:"..money)
       sendSafe(from,"CLAIM SENT")
       print(os.date("%H:%M:%S").." Claim request sent from "..s.name.." to "..target.." amount "..money)
     else
@@ -195,8 +208,10 @@ while true do
       if upper=="YES"
          and accounts[s.name].money>=c.money
          and accounts[c.from] then
-        accounts[s.name].money =accounts[s.name].money - c.money
-        accounts[c.from].money =accounts[c.from].money + c.money
+        accounts[s.name].money =
+          accounts[s.name].money - c.money
+        accounts[c.from].money =
+          accounts[c.from].money + c.money
         save(accounts)
         log("CLAIM "..c.from.." <- "..s.name.." : "..c.money)
         print(os.date("%H:%M:%S").." CLAIM: "..c.from.." <- "..s.name.." : "..c.money)
