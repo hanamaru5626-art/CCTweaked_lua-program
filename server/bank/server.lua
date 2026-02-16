@@ -3,8 +3,8 @@ local bit = bit
 
 net.init(12)
 
-local ACCOUNT_FILE = "/disk/accounts.dat"
-local LOG_FILE = "/disk/transactions.log"
+local ACCOUNT_FILE = "/accounts.dat"
+local LOG_FILE = "/transactions.log"
 
 local sessions = {}
 local ADMIN_PASSWORD = "admin123"
